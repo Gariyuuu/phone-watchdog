@@ -106,12 +106,22 @@ missing information.
 
 ## Recently completed
 
+- **2026-08-07 — Verification pass + README.md added (17/17 docs
+  complete).** Re-verified all 16 existing docs against the live repo
+  and git state (venv still broken, exactly as documented; `monitor.py`
+  still compiles; no secrets found). Wrote `README.md`, the one missing
+  file. Fixed a staleness bug: `PROJECT_STATE.md`, `TASKS.md` (this
+  entry), and `CHANGELOG.md` previously said the 2026-08-06 doc batch
+  was "not committed" — it actually was, later that same session
+  (`6631562`, pushed to `origin/main`). Corrected.
 - **2026-08-06 — Full documentation/handoff audit.** Built all 17
   standard memory files (`CLAUDE.md` through `HANDOFF.md`) from a
   first-principles read of `monitor.py`, `requirements.txt`,
   `.gitignore`, and the git history. Discovered and documented the
   broken `venv/` (previously unknown/undocumented). No application code
-  was changed; nothing was committed.
+  was changed. Committed and pushed as `6631562` later the same session
+  (this was not yet true at the moment this file was originally
+  written — see the 2026-08-07 correction entry above).
 - **2026-08-03 — Initial commit (`d2c04e6`).** `monitor.py`,
   `requirements.txt`, `.gitignore` — the entire application as it exists
   today.

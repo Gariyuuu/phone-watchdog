@@ -30,21 +30,26 @@ In order:
 
 ## What is the current task?
 
-**No application-code task is in progress.** This session's work was a
-documentation-only audit (building this 17-file memory system from
-scratch — the repo had none before). That work is complete: all 17 files
-exist, are internally consistent, and contain no invented facts or
-secrets. The recommended next task, if the user wants to continue, is
-`TASKS.md` → **TASK-001: rebuild the broken `venv/`** — but confirm with
-the user before starting it; don't assume it's wanted without asking.
+**No application-code task is in progress.** The documentation set is
+now complete and verified: `README.md` was added 2026-08-07 (the doc set
+is 17/17 including this file), and a fresh verification pass confirmed
+`venv/` is still broken (unchanged), `monitor.py` still compiles, and no
+secrets exist anywhere in the repo. A staleness bug was also found and
+fixed this pass: several files claimed the 2026-08-06 doc batch was
+"never committed" — it actually was, as commit `6631562`, pushed to
+`origin/main`. The recommended next task, if the user wants to continue,
+is `TASKS.md` → **TASK-001: rebuild the broken `venv/`** — but confirm
+with the user before starting it; don't assume it's wanted without
+asking.
 
 ## What works right now?
 
 - `monitor.py` is syntactically valid Python (`py_compile` passes).
 - The code, read line-by-line, is internally coherent and appears to be
   a complete first draft of its stated behavior — no stubs or TODOs.
-- Git itself is healthy: clean tree, one commit, one branch, tracking a
-  real GitHub remote.
+- Git itself is healthy: clean tree, two commits (`d2c04e6` initial
+  commit, `6631562` the 2026-08-06 documentation batch — both pushed to
+  `origin/main`), one branch, tracking a real GitHub remote.
 
 ## What is broken?
 
@@ -118,22 +123,35 @@ webcam and a phone.
 Copy-paste this to start a new session cleanly:
 
 ```
-Read CLAUDE.md, PROJECT_STATE.md, and TASKS.md in full before doing
-anything else. Then:
+Read HANDOFF.md, CLAUDE.md, PROJECT_STATE.md, and TASKS.md in full
+before doing anything else. Then:
 
-1. Run `git status` and `git log --oneline -5` and confirm the repo
-   state matches what PROJECT_STATE.md describes. If it doesn't
-   (someone else has committed/changed things since), stop and tell me
-   what's different before proceeding.
+1. Run `git status`, `git log --oneline -5`, and `git fetch origin`
+   (read-only) and confirm the repo state matches what PROJECT_STATE.md
+   describes: two commits (`d2c04e6`, `6631562`), clean tree, `main`
+   pushed and in sync with `origin/main`. If it doesn't match (someone
+   else has committed/changed things since), stop and tell me what's
+   different before proceeding.
 2. Run `./venv/bin/python -m py_compile monitor.py` and confirm it still
-   passes (safe, syntax-only — does not open the webcam).
+   passes (safe, syntax-only — does not open the webcam). Also check
+   whether `venv/` is still the broken symlink chain into
+   hyperliquid-bot/sports-betting-project (see CLAUDE.md Known issues
+   #1) or whether someone has since fixed it (TASK-001) — don't assume
+   either way, check `venv/bin/python3 -m pip list`.
 3. In 3-5 sentences, summarize your understanding of: what this project
-   is, what it actually monitors and how, and what the single biggest
-   blocker is right now (the broken venv/). I want to confirm you've
-   actually absorbed the memory files, not just skimmed them.
-4. Flag anything in CLAUDE.md/PROJECT_STATE.md/TASKS.md/FEATURES.md that
-   looks stale or contradicts what you find in the actual code — don't
-   silently work around a contradiction, surface it.
+   is, what it actually monitors and how, where any data it touches
+   lives (see README.md / SECURITY.md / DATABASE.md — the short answer
+   is "nowhere, it's all in-memory and discarded"), and what the single
+   biggest blocker is right now (the broken venv/, unless someone has
+   fixed it since). I want to confirm you've actually absorbed the
+   memory files, not just skimmed them.
+4. Flag anything in CLAUDE.md/PROJECT_STATE.md/TASKS.md/FEATURES.md/
+   README.md that looks stale or contradicts what you find in the
+   actual code or git state — don't silently work around a
+   contradiction, surface it and fix it. (This has happened before: the
+   2026-08-06 doc batch claimed "not committed" for a while after it
+   actually had been committed and pushed — caught and fixed
+   2026-08-07. Watch for the same class of drift.)
 5. Do NOT run the full monitor.py webcam/detection/GUI loop unless I am
    explicitly present and have asked you to — it opens a real camera and
    drives a real fullscreen overlay + audible alarm.
@@ -143,5 +161,8 @@ anything else. Then:
    successfully — don't just assume it worked.
 7. After completing any meaningful work, update PROJECT_STATE.md,
    TASKS.md, and append to SESSION_LOG.md before ending your session —
-   don't let the next handoff start from a stale snapshot.
+   don't let the next handoff start from a stale snapshot. If you commit
+   anything, immediately re-read the git-state claims in
+   PROJECT_STATE.md/TASKS.md/CHANGELOG.md and update them in the same
+   pass — don't leave them describing a pre-commit world.
 ```

@@ -75,3 +75,73 @@ prepared for whoever does that work (`TESTING.md`).
 
 **Handoff point:** See `HANDOFF.md` for the exact resume point and the
 "Prompt for the next Claude Code account" block.
+
+---
+
+## Session 2 — 2026-08-07 — Verification pass, README added, staleness fixed
+
+**Who:** Claude Code (Sonnet 5), documentation-only task (16/17 → 17/17,
+plus a re-verification pass across the existing 16).
+
+**What was asked:** Confirm the 16 existing docs are still accurate
+(with extra scrutiny on `SECURITY.md`/`DATABASE.md` given this is a
+webcam-monitoring tool), write the missing `README.md`, re-verify
+`PROJECT_STATE.md`/`TASKS.md`/`FEATURES.md` against real code/git state,
+check for secrets and cross-file contradictions, and refresh the
+"Prompt for the next Claude Code account" section.
+
+**What was done:**
+1. Read `monitor.py`, `requirements.txt`, `.gitignore` directly (not
+   just the docs' descriptions of them) — confirmed still accurate:
+   no persistence, no network calls beyond the one-time YOLO weights
+   download, no credentials, no relationship to `phone-watchdog-web`.
+2. Confirmed `venv/` is **still broken**, identically to how
+   `CLAUDE.md`/`PROJECT_STATE.md`/`TASKS.md` describe it: `venv/bin/
+   python3` still symlinks into `~/Projects/hyperliquid-bot/.venv` →
+   `~/Projects/sports-betting-project/.venv`, `pip list` still shows
+   only `pip`/`setuptools`. No change since 2026-08-06 — not fixed this
+   session either (documentation/verification pass, not a code-fix
+   task).
+3. Ran `./venv/bin/python -m py_compile monitor.py` — still passes.
+4. Ran `git status` (clean), `git log --oneline -5`, and `git fetch
+   origin` (read-only, no new remote refs) — confirmed `HEAD` ==
+   `origin/main` == `6631562`.
+5. **Found a staleness bug:** `PROJECT_STATE.md`, `TASKS.md`, and
+   `CHANGELOG.md` all stated the 2026-08-06 17-file doc batch was "not
+   committed" / "untracked." That was true at the moment those files
+   were originally drafted, but went stale later the same session when
+   commit `6631562` ("docs: add full handoff documentation system",
+   2026-08-06T20:20:25-07:00) actually committed and pushed all 17
+   files to `origin/main` — and the files were never updated to reflect
+   that. Fixed in all three files this session.
+6. Wrote `README.md` (previously the only missing file of the 17):
+   what the script monitors, the stack, how to run it, an explicit
+   "what data is collected, where it lives" section (answer: nothing is
+   stored or transmitted — verified against `SECURITY.md`/`DATABASE.md`,
+   not just asserted), and a cross-reference to `phone-watchdog-web`
+   that's explicit about there being **no actual code integration**
+   between the two projects today (verified, not assumed).
+7. Grepped all tracked files and all 17 docs for
+   `password|api[_-]?key|secret|token|credential` patterns — no real
+   secrets found; only prose discussing the *absence* of secrets and one
+   mention of a hypothetical future `.env.example` placeholder pattern.
+8. Reviewed `ARCHITECTURE.md`, `DEPLOYMENT.md`, `TESTING.md`,
+   `API_REFERENCE.md`, `DECISIONS.md`, `FILE_MAP.md`, `ROADMAP.md`,
+   `UI_SYSTEM.md` — all still accurate against current code/git state, no
+   further contradictions found.
+9. Refreshed `HANDOFF.md`'s "Prompt for the next Claude Code account"
+   section to reflect the current two-commit git state and to explicitly
+   warn future sessions about the same class of staleness bug found in
+   step 5.
+
+**What was NOT done:** No application code (`monitor.py`) was touched.
+`venv/` was not rebuilt (TASK-001 still open). The webcam/detection/GUI
+loop was not launched.
+
+**Outcome:** Documentation set is now 17/17 (README.md added), fully
+re-verified against live code and git state, with one real staleness bug
+(false "not committed" claims) found and corrected across three files.
+No secrets found anywhere in the repo.
+
+**Handoff point:** See `HANDOFF.md`'s refreshed "Prompt for the next
+Claude Code account" block.

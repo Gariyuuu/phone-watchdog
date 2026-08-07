@@ -17,24 +17,26 @@ meaningful session (see `CLAUDE.md` → Permanent rules).
 - **Tracking:** `origin/main`
   (`https://github.com/Gariyuuu/phone-watchdog.git`), up to date with
   the remote as of this audit (`git status` reports "up to date")
-- **Latest commit:** `d2c04e63dbe6afc26436aa206cbca756a41fd904` —
+- **Latest commit:** `6631562` — "docs: add full handoff documentation
+  system" (Gary Wang, 2026-08-06T20:20:25-07:00), on top of `d2c04e6` —
   "Initial commit: phone watchdog monitor script" (Gary Wang,
-  2026-08-03T14:07:49-07:00). This is the **only** commit in the
-  repository's history.
+  2026-08-03T14:07:49-07:00). Two commits total in the repository's
+  history, both pushed to `origin/main` (confirmed via `git rev-parse
+  HEAD` == `git rev-parse origin/main` during the 2026-08-07 verification
+  pass below).
 - **Working tree:** **Clean.** `git status --porcelain` returns nothing.
-  No modified, staged, or untracked files (before this audit added the
-  17 new documentation files below).
-- **Files added by this audit (untracked until committed):**
-  `CLAUDE.md`, `PROJECT_STATE.md`, `ARCHITECTURE.md`, `FILE_MAP.md`,
-  `FEATURES.md`, `TASKS.md`, `ROADMAP.md`, `DECISIONS.md`, `DATABASE.md`,
-  `API_REFERENCE.md`, `UI_SYSTEM.md`, `SECURITY.md`, `TESTING.md`,
-  `DEPLOYMENT.md`, `CHANGELOG.md`, `SESSION_LOG.md`, `HANDOFF.md` (17
-  files total). **None of these have been committed** — per the task's
-  explicit instructions, this is a documentation-only pass; no commit,
-  push, deploy, reset, or discard was performed.
-- **Tracked repo contents (from the one commit):** `.gitignore`,
-  `monitor.py`, `requirements.txt` — 171 lines total across those three
-  files. `venv/` exists on disk but is gitignored and was never tracked.
+- **Correction (2026-08-07 verification pass):** this file previously
+  stated the 17 documentation files added by the 2026-08-06 audit were
+  "untracked until committed" / "none of these have been committed."
+  That was stale — they *were* committed later that same session
+  (`6631562`, timestamped 20:20:25, after this file's own audit-timestamp
+  narrative was written) and the commit is pushed to `origin/main`. Fixed
+  here; see `SESSION_LOG.md` Session 2 for the correction record.
+- **Tracked repo contents:** `.gitignore`, `monitor.py`,
+  `requirements.txt` (from `d2c04e6`) plus the 17 documentation files and
+  now `README.md` (added 2026-08-07, filling the one gap the 17-file set
+  didn't originally include). `venv/` exists on disk but is gitignored
+  and was never tracked.
 
 ## Active objective
 

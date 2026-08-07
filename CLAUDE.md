@@ -44,8 +44,10 @@ stated as fact.
   Mac while working, as a self-imposed anti-phone-distraction nag. Not
   built for distribution, install, or use by anyone other than the
   person running it in front of their own webcam.
-- **Current development stage:** Very early / minimal. One file, one
-  commit, no tests, no packaging, no automation to run it as a service.
+- **Current development stage:** Very early / minimal. One application
+  file (`monitor.py`), two commits total (the app itself, plus a later
+  documentation batch), no tests, no packaging, no automation to run it
+  as a service.
   Functionally it reads as a complete first draft of the described
   behavior (see "Completeness classification" below), but it has never
   been runtime-verified in this environment because the project's own
@@ -76,8 +78,12 @@ stated as fact.
 
 See `PROJECT_STATE.md` for the exact, timestamped snapshot. Summary:
 
-- **Latest milestone:** Initial commit only (`d2c04e6`, 2026-08-03) —
-  `monitor.py`, `requirements.txt`, `.gitignore`. No further commits.
+- **Latest milestone:** Initial commit (`d2c04e6`, 2026-08-03) —
+  `monitor.py`, `requirements.txt`, `.gitignore` — followed by a
+  documentation-only commit (`6631562`, 2026-08-06) adding the 17-file
+  handoff memory system, and `README.md` added 2026-08-07 (untracked as
+  of writing this line; see `PROJECT_STATE.md` for exact current git
+  state). No application-code commits beyond the initial one.
 - **Current blockers:** The project's own `venv/` is broken — see
   "Known issues" below. As shipped, running the script via the exact
   command its own docstring recommends (`./venv/bin/python monitor.py`)
