@@ -50,9 +50,10 @@ stated as fact.
   as a service.
   Functionally it reads as a complete first draft of the described
   behavior (see "Completeness classification" below), but it has never
-  been runtime-verified in this environment because the project's own
-  `venv/` is broken (see "Known issues" — this is the single most
-  important fact for anyone picking this up).
+  been runtime-verified in this environment — its own `venv/` was broken
+  as of the 2026-08-06 audit and is now fixed (confirmed 2026-08-17, see
+  "Known issues" #1), but no live webcam smoke test has happened yet
+  (that's the current task, `T-002`/`TASK-002`, see `TASKS.md`).
 - **Production status:** **Not deployed anywhere.** This is a local
   script, not a hosted service. No evidence of it being packaged,
   scheduled, or run as a background service (no launchd `.plist`, no
@@ -76,6 +77,16 @@ stated as fact.
 
 ## Current status
 
+**2026-08-17 update [Verified], documentation sweep (no feature work):**
+Current task is now `T-002`/`TASK-002` (see `TASKS.md`) — `T-001`
+("rebuild the broken `venv/`") is **done**: `venv/bin/python3` now
+resolves to a real interpreter and both `cv2`/`ultralytics` import
+successfully (confirmed by running it directly). Checked-out branch is
+`chore/venv-fix` but has zero commits beyond `main` (the venv fix left
+no git trace, since `venv/` is gitignored). "Known issues" item #1
+below is resolved; everything else in this section is the original
+2026-08-06/07 account, otherwise still accurate.
+
 See `PROJECT_STATE.md` for the exact, timestamped snapshot. Summary:
 
 - **Latest milestone:** Initial commit (`d2c04e6`, 2026-08-03) —
@@ -84,16 +95,14 @@ See `PROJECT_STATE.md` for the exact, timestamped snapshot. Summary:
   handoff memory system, and `README.md` added 2026-08-07 (untracked as
   of writing this line; see `PROJECT_STATE.md` for exact current git
   state). No application-code commits beyond the initial one.
-- **Current blockers:** The project's own `venv/` is broken — see
-  "Known issues" below. As shipped, running the script via the exact
-  command its own docstring recommends (`./venv/bin/python monitor.py`)
-  will fail immediately with `ModuleNotFoundError: No module named
-  'cv2'`. This was discovered and verified during this audit, not
-  previously documented anywhere.
-- **Highest-priority next task:** Rebuild `venv/` from scratch
-  (`python3 -m venv venv && ./venv/bin/pip install -r requirements.txt`)
-  and do a real, human-supervised smoke test in front of the actual
-  webcam before trusting the detection logic. See `TASKS.md`.
+- **Current blockers:** ~~The project's own `venv/` is broken~~ **Fixed,
+  see the 2026-08-17 update above.** As shipped, running the script via
+  the exact command its own docstring recommends (`./venv/bin/python
+  monitor.py`) used to fail immediately with `ModuleNotFoundError: No
+  module named 'cv2'` — no longer the case.
+- **Highest-priority next task:** `T-002`/`TASK-002` — a real,
+  human-supervised smoke test in front of the actual webcam, now that
+  the venv is fixed. See `TASKS.md`.
 
 ## Completeness classification
 
@@ -278,25 +287,20 @@ issues).
 
 ## Known issues
 
-1. **CRITICAL — the committed `venv/` is broken and does not contain the
-   project's dependencies.** Verified this audit:
-   `venv/bin/python3` is a symlink to
-   `/Users/gariyuu/Projects/hyperliquid-bot/.venv/bin/python3`, which is
-   itself a symlink to
-   `/Users/gariyuu/Projects/sports-betting-project/.venv/bin/python3` —
-   i.e. this venv's interpreter is not phone-watchdog's own Python at
-   all, it's borrowed (likely accidentally, e.g. `python3 -m venv venv`
-   run with an already-broken `python3` on `PATH` at creation time) from
-   two unrelated sibling projects. Running `venv/bin/python3 -m pip list`
-   shows only `pip` and `setuptools` — **neither `opencv-python` nor
-   `ultralytics` is installed** anywhere in the resolved environment.
-   Running `./venv/bin/python monitor.py` exactly as the script's own
-   docstring instructs will fail immediately with `ModuleNotFoundError:
-   No module named 'cv2'`. **Fix: delete and rebuild `venv/` from
-   scratch** (`rm -rf venv && python3 -m venv venv && ./venv/bin/pip
-   install -r requirements.txt`) before attempting to run this script.
-   Not fixed during this audit (documentation-only pass, per
-   instructions — flagging rather than acting).
+1. ~~**CRITICAL — the committed `venv/` is broken**~~ — **RESOLVED, verified
+   2026-08-17.** Originally: `venv/bin/python3` was a symlink to
+   `/Users/gariyuu/Projects/hyperliquid-bot/.venv/bin/python3`, itself a
+   symlink to `/Users/gariyuu/Projects/sports-betting-project/.venv/bin/python3`
+   — borrowed from two unrelated sibling projects, with neither
+   `opencv-python` nor `ultralytics` installed. **As of 2026-08-17,
+   `venv/bin/python3` is a real interpreter**
+   (`/opt/homebrew/Cellar/python@3.11/.../bin/python3.11`) with both
+   packages installed and importable (`cv2` 5.0.0.93, `ultralytics`
+   8.4.118, confirmed via a direct import test). No commit exists for
+   this fix since `venv/` is gitignored — it's a disk-state fact, not a
+   git-history fact. Kept here (marked resolved) rather than deleted, so
+   a future session doesn't re-discover and re-fix the same problem or
+   wonder why it disappeared without explanation.
 2. **No pinned dependency versions.** `requirements.txt` lists
    `opencv-python` and `ultralytics` with no version constraints — a
    fresh `pip install` at any future date could pull a materially
@@ -377,8 +381,11 @@ Future Claude Code sessions (or any AI agent) working in this repo must:
     explicit point of the task — this script is currently fully local
     and offline-after-first-run by design (as far as this audit can
     tell); don't quietly change that.
-14. Never assume `venv/` works — it is currently broken (see Known
-    issues #1). Verify or rebuild it before relying on it.
+14. Don't assume `venv/` works without checking — it was broken as of
+    the 2026-08-06 audit but confirmed fixed on 2026-08-17 (see Known
+    issues #1); since it's gitignored, a future session has no git-based
+    way to know its state, so a quick `venv/bin/python3 -c "import cv2,
+    ultralytics"` check is cheap insurance before relying on it.
 15. Never remove a dependency without checking all usages first.
 16. Never change `COCO_CELL_PHONE_CLASS_ID`, the alarm sound path, or the
     trigger/clear timing constants without it being the explicit point

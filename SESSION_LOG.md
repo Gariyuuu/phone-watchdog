@@ -145,3 +145,43 @@ No secrets found anywhere in the repo.
 
 **Handoff point:** See `HANDOFF.md`'s refreshed "Prompt for the next
 Claude Code account" block.
+
+## Session 3 — 2026-08-17 — Documentation sweep (onboard mode, no feature work)
+
+**Trigger:** Batch documentation-freshness sweep across several
+portfolio repos, not tied to a specific new-work request in this repo.
+
+**What was found:**
+1. Checked-out branch is `chore/venv-fix`, not `main` — but
+   `git log --oneline main..chore/venv-fix` is empty (zero unique
+   commits). Consistent with a local-only `venv/` fix, since `venv/` is
+   gitignored and leaves no git trace.
+2. **`TASK-001` (rebuild the broken `venv/`) is done.** Ran
+   `venv/bin/python3 -c "import cv2, ultralytics"` directly — succeeded
+   (`cv2` 5.0.0.93, `ultralytics` 8.4.118). `venv/bin/python3` now
+   resolves to a real `python3.11` interpreter (dated Aug 13 on disk),
+   not the symlink-into-two-other-projects chain the 2026-08-06 audit
+   found. This is exactly the check `HANDOFF.md`'s own prompt template
+   told a future session to run rather than assume either way.
+3. Re-confirmed (from this repo's side) that there is still no
+   relationship of any kind with `~/Projects/phone-watchdog-web` —
+   `monitor.py` was re-read for HTTP/DB imports (none found), and this
+   was cross-checked against that repo's own code during its own sweep
+   the same session (also none found there).
+
+**What was changed:** `CLAUDE.md`, `PROJECT_STATE.md`, `TASKS.md`,
+`HANDOFF.md`, `ARCHITECTURE.md` — updated to mark `TASK-001` done, set
+`TASK-002` (a.k.a. `T-002`) as the current task, and record the
+cross-repo re-confirmation. Added a `T-00x`-style ID alongside this
+repo's existing `TASK-00x` numbering so the current-task reference is
+consistent with the convention used across other repos in this
+portfolio, without renaming this repo's own established task list.
+`python3 verify_docs.py --root .` — all checks pass. No secrets found.
+
+**What was NOT done:** `monitor.py` was not modified. The webcam/
+detection/GUI loop was not launched (that's `T-002`, and it requires a
+human physically present — not something to do unattended).
+
+**Handoff point:** `TASKS.md` → `T-002`/`TASK-002` (the real,
+human-supervised smoke test) is the next concrete step, pending
+confirmation with the user.

@@ -6,6 +6,18 @@ here is backed by the other memory files in this repo root, all written
 2026-08-06 from a direct audit of the actual code — not from chat
 history.
 
+## 2026-08-17 update [Verified] — documentation sweep, no feature work
+
+Current task is now `T-002`/`TASK-002` (real webcam smoke test) — `T-001`
+(rebuild `venv/`) is **done**, confirmed by directly running
+`venv/bin/python3 -c "import cv2, ultralytics"` (succeeded: `cv2`
+5.0.0.93, `ultralytics` 8.4.118). This was exactly the check this file's
+own prior version told the next session to run rather than assume
+either way — it paid off. Checked-out branch is `chore/venv-fix` but has
+no commits beyond `main` (the fix isn't in git history since `venv/` is
+gitignored). Full detail: `PROJECT_STATE.md`'s 2026-08-17 block,
+`CLAUDE.md` Known issues #1.
+
 ## What is this project?
 
 A single Python script (`monitor.py`) that watches your webcam for a
@@ -30,17 +42,22 @@ In order:
 
 ## What is the current task?
 
-**No application-code task is in progress.** The documentation set is
-now complete and verified: `README.md` was added 2026-08-07 (the doc set
-is 17/17 including this file), and a fresh verification pass confirmed
-`venv/` is still broken (unchanged), `monitor.py` still compiles, and no
-secrets exist anywhere in the repo. A staleness bug was also found and
-fixed this pass: several files claimed the 2026-08-06 doc batch was
-"never committed" — it actually was, as commit `6631562`, pushed to
-`origin/main`. The recommended next task, if the user wants to continue,
-is `TASKS.md` → **TASK-001: rebuild the broken `venv/`** — but confirm
-with the user before starting it; don't assume it's wanted without
-asking.
+**No application-code task is in progress.** As of 2026-08-17, `T-001`
+(rebuild the broken `venv/`) is done — see the update block at the top
+of this file. The recommended next task, if the user wants to continue,
+is `TASKS.md` → **`T-002`/`TASK-002`: a real, human-supervised smoke
+test** — but confirm with the user before starting it; it requires a
+human physically present with a webcam and a phone, and don't assume
+it's wanted without asking.
+
+*(Original 2026-08-07 account, now superseded on the venv point:
+`README.md` was added 2026-08-07 (the doc set is 17/17 including this
+file), and a fresh verification pass confirmed `venv/` was still broken
+at that time, `monitor.py` still compiled, and no secrets existed
+anywhere in the repo. A staleness bug was also found and fixed that
+pass: several files claimed the 2026-08-06 doc batch was "never
+committed" — it actually was, as commit `6631562`, pushed to
+`origin/main`.)*
 
 ## What works right now?
 
@@ -53,29 +70,26 @@ asking.
 
 ## What is broken?
 
-**The local `venv/` does not work.** `venv/bin/python3` is a symlink
-chain into two *other, unrelated* projects'
-virtualenvs (`~/Projects/hyperliquid-bot/.venv` →
-`~/Projects/sports-betting-project/.venv`), and neither
-`opencv-python` nor `ultralytics` — the two things `monitor.py` actually
-needs — is installed anywhere in that chain. Running the script exactly
-as its own docstring instructs (`./venv/bin/python monitor.py`) fails
-immediately with `ModuleNotFoundError: No module named 'cv2'`. This was
-discovered during this audit and had never been documented before.
+**Nothing, as of 2026-08-17.** ~~The local `venv/` does not work~~ — it
+was fixed (fix undated, no git trace since `venv/` is gitignored;
+confirmed working 2026-08-17 by direct import test). Originally:
+`venv/bin/python3` was a symlink chain into two *other, unrelated*
+projects' virtualenvs (`~/Projects/hyperliquid-bot/.venv` →
+`~/Projects/sports-betting-project/.venv`), with neither
+`opencv-python` nor `ultralytics` installed anywhere in that chain.
 
-Beyond that: whether the actual detection/alarm/overlay behavior works
-correctly against a real webcam is **Unable to verify** — it has never
-been run in this environment (deliberately not attempted this session,
-per the task's own safety instructions about not acting on real
-camera/personal data before fully understanding the code — which has
-now been done via full manual read).
+Whether the actual detection/alarm/overlay behavior works correctly
+against a real webcam is still **Unable to verify** — it has never been
+run in this environment (deliberately not attempted, per the project's
+own safety instructions about not acting on real camera/personal data
+unattended). That's `T-002`/`TASK-002`, the current task.
 
 ## What should I do next?
 
-If the user wants this script actually usable: `TASKS.md` TASK-001
-(rebuild `venv/`) then TASK-002 (a real, human-supervised smoke test —
-see `TESTING.md`'s full checklist). If the user has something else in
-mind, don't assume — ask.
+If the user wants this script actually usable: `TASKS.md` `T-002`/
+`TASK-002` — a real, human-supervised smoke test (see `TESTING.md`'s
+full checklist). `T-001`/`TASK-001` (rebuild `venv/`) is already done.
+If the user has something else in mind, don't assume — ask.
 
 ## Which files are most important?
 

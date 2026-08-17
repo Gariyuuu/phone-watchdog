@@ -4,6 +4,33 @@
 It will go stale the instant more work happens — update it after every
 meaningful session (see `CLAUDE.md` → Permanent rules).
 
+## 2026-08-17 update [Verified] — current task `T-002` — read this before the rest of the file
+
+A documentation-sweep session (no feature work) found two things:
+
+1. **The checked-out branch is `chore/venv-fix`, not `main`** — but it
+   has **zero commits beyond what `main` already has**
+   (`git log --oneline main..chore/venv-fix` is empty). This is
+   consistent with someone having fixed the local `venv/` (see below)
+   under that branch name, but since `venv/` is gitignored, that fix
+   left no git trace — there's nothing to diverge. No application code
+   or docs changed on this branch that isn't already on `main`.
+2. **`TASK-001` ("rebuild the broken local `venv/`") is done.** Verified
+   directly: `venv/bin/python3` now resolves to a real interpreter
+   (`/opt/homebrew/Cellar/python@3.11/.../bin/python3.11`, dated Aug 13
+   on disk) rather than the symlink-into-another-project's-venv chain
+   the 2026-08-06 audit found. `./venv/bin/python3 -c "import cv2,
+   ultralytics"` succeeds (`cv2` 5.0.0.93, `ultralytics` 8.4.118) —
+   confirmed by running it directly this sweep. This was **not**
+   accompanied by a live webcam smoke test (`TASK-002`), which remains
+   the new current task — it requires a human physically present.
+
+Nothing else changed: still 2 real application/doc commits total on
+`main` (`d2c04e6`, `6631562`) plus the 2026-08-07 doc-correction commit
+(`eb595f5`, current `HEAD`), working tree clean. The rest of this file
+(written 2026-08-06/07) is preserved below as history — its "`venv/` is
+broken" framing is now outdated per the above.
+
 ## Audit timestamp
 
 - **Audit performed:** 2026-08-06 (documentation/handoff audit — no

@@ -97,12 +97,19 @@ not a correctness-relevant gate.
 imports are `queue`, `subprocess`, `threading`, `time`, `tkinter`, `cv2`,
 and `ultralytics.YOLO`. There is no HTTP client, no socket, no URL
 string, and no shared-config file referencing `phone-watchdog-web`
-anywhere in this repository. If the two projects are meant to talk to
-each other, that integration does not exist on this side as of this
-audit (2026-08-06) — it would need to be added deliberately, or
-confirmed to already exist from `phone-watchdog-web`'s side
-independently (not investigated here, out of scope for this repo's
-audit).
+anywhere in this repository. `monitor.py` also imports no database
+library (`sqlite3`, `psycopg`, etc.) — it performs no persistence of any
+kind, unlike `phone-watchdog-web`'s Postgres `catches` table. If the two
+projects are meant to talk to each other, that integration does not
+exist on this side as of this audit (2026-08-06) — it would need to be
+added deliberately.
+
+**[Verified 2026-08-17, from both sides]:** independently re-confirmed
+during a documentation sweep of `~/Projects/phone-watchdog-web` — that
+repo's own application code contains no reference to this repo either,
+no shared package, and no shared database. Neither repo has changed
+since the original 2026-08-06 audit that first established "no
+relationship." Confirmed from both sides, not just inferred from one.
 
 ## Error handling
 
